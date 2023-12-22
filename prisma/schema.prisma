@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  id Int @id
+  codeNumber Int @unique
+  name String
+  histories History[]
+}
+
+model History {
+  id Int @id @default(autoincrement())
+  
+  date DateTime//買った日付
+  
+  buyer Member @relation(fields: [buyerId], references: [id])//購入者
+  buyerId Int//購入者の学籍番号
+  
+  price Int
+  purchaseName String
+  toolOrArtwork ToolOrArtwork//作品か工具か
+  reason String//購入目的
+  
+  shopNameOrURL String//店(名前かURL)
+}
+
+enum ToolOrArtwork {
+  Artwork
+  Tool
+}
