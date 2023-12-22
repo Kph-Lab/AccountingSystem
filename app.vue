@@ -1,21 +1,25 @@
 <template>
+  <button
+    @click="createHistoryFromInputedData"
+    class="bg-blue-600/90 border-2 border-blue-600 py-4 px-6 rounded-full text-white font-semibold fixed bottom-10 left-1/2 -translate-x-1/2">
+    新しい購入履歴を作成
+  </button>
   <main class="p-4">
-    <button @click='() => createHistory({
-  buyerId: 12610204,
-  date: new Date("2023/8/24"),
-  price: 1445,
-  purchaseName: "ドメイン",
-  toolOrArtwork: "Tool",
-  reason: "物理部公式ウェブサイトのドメイン購入のため",
-  shopNameOrURL: "cloudflare"
-})'>aaaa</button>
     <div class="flex flex-col gap-4 max-w-2xl mx-auto">
       <div
         v-for="history in histories"
-        class="flex flex-col gap-1 p-2 rounded-lg shadow-xl shadow-slate-600/5">
-        <p class="text-lg font-semibold">{{ history.purchaceName }}</p>
-        <div class="flex flex-row gap-4 px-1 text-sm">
+        class="flex flex-col gap-2 p-2 rounded-lg">
+        <div class="flex flex-col">
+          <p class="text-lg font-semibold">
+            {{ history.purchaceName }}
+            <span class="text-sm font-normal">({{ history.toolOrArtwork }})</span>
+          </p>
+          <p class="text-xs text-black/60 pl-0.5">{{ history.reason }}</p>
+        </div>
+        <div class="flex flex-row gap-4 pl-1 text-sm text-black/80">
           <p>¥{{ history.price }}</p>
+          <p>📅{{ history.date }}</p>
+          <p>@{{ history.shop }}</p>
           <div class="flex flex-row gap-1 items-center">
             <img
               :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
@@ -23,6 +27,13 @@
               class="h-4 w-4 -mt-0.5">
             <p>{{ history.buyer.name }}</p>
           </div>
+          <p
+            v-if="history.memo"
+            style="
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;"
+          >{{ history.memo }}</p>
         </div>
       </div>
     </div>
@@ -39,10 +50,29 @@ async function createHistory(newHistory: Omit<PrismaHistory, "id">){
   })
 }
 
+async function createHistoryFromInputedData(){
+  await createHistory({
+    buyerId: 12610204,
+    date: new Date("2023/8/24"),
+    price: 1445,
+    purchaseName: "ドメイン",
+    toolOrArtwork: "Tool",
+    reason: "物理部公式ウェブサイトのドメイン購入のため",
+    shopNameOrURL: "cloudflare"
+  })
+  await updateHistories()
+}
+
+const histories = ref<History[]>([])
+
 async function getHistories(){
-  const histories = await $fetch("/api/history/get", { method: "GET" })
+  const histories = await $fetch("/api/history/get", { method: "GET" }) as unknown as History[]
   return histories
 }
 
-const histories = await getHistories()
+async function updateHistories(){
+  histories.value = await getHistories()
+}
+
+updateHistories()
 </script>

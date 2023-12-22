@@ -10,4 +10,5 @@ export type History = {
     date: string
     reason: string
     shop: string
+    memo?: string
 }

@@ -28,6 +28,7 @@ export default defineEventHandler(async () => {
             toolOrArtwork,
             date: formatDate(history.date),
             reason: history.reason,
+            memo: history.memo ?? undefined,
             shop: history.shopNameOrURL
         }
     }))

@@ -29,8 +29,11 @@ model History {
   purchaseName String
   toolOrArtwork ToolOrArtwork//作品か工具か
   reason String//購入目的
+  memo String?//備考
   
   shopNameOrURL String//店(名前かURL)
+
+  returned Boolean @default(false)
 }
 
 enum ToolOrArtwork {
