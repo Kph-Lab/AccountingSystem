@@ -1,24 +1,27 @@
 <template>
   <div class="flex flex-row">
-    <header class="bg-slate-100 p-4">
-      aaa
+    <header class="bg-slate-100 px-4 py-8 flex flex-col gap-8">
+      <button>
+        <Icon
+          name="bi:card-checklist"
+          class="text-2xl"/>
+      </button>
+      <button>
+        <Icon
+          name="bi:people"
+          class="text-2xl"/>
+      </button>
+      <div class="grow"/>
+      <button @click="downloadData">
+        <Icon
+          name="bi:cloud-download"
+          class="text-2xl"/>
+      </button>
     </header>
     <main class="p-4 relative grow h-screen overflow-y-auto">
-      <div class="flex flex-row gap-2 bg-white/80 backdrop-blur-md rounded-xl p-4 shadow-2xl fixed bottom-10 left-1/2 -translate-x-1/2">
-        <div class="flex flex-col gap-2">
-          <input type="text" placeholder="購入した物品名">
-          <input type="text" placeholder="備考">
-          <input type="text" placeholder="購入者名">
-          <input type="text" placeholder="購入した店名(オンラインの場合はURL)">
-          <input type="date" placeholder="購入日">
-          <input type="number" placeholder="金額">
-        </div>
-        <button
-          @click="createHistoryFromInputedData"
-          class="bg-blue-600/90 border-2 border-blue-600 h-8 w-8 grid place-content-center rounded-full text-white">
-          <Icon name="bi:plus" class="text-xl"/>
-        </button>
-      </div>
+      <CreateHistory
+        class="fixed bottom-10 left-1/2 -translate-x-1/2"
+        @created="updateHistories"/>
       <div class="flex flex-col gap-4 max-w-2xl mx-auto">
         <div
           v-for="history in histories"
@@ -64,28 +67,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { History as PrismaHistory } from "@prisma/client"
 import type { History } from "./model/history"
-
-async function createHistory(newHistory: Omit<PrismaHistory, "id">){
-  await $fetch("/api/history/create", {
-    method: "POST",
-    body: newHistory
-  })
-}
-
-async function createHistoryFromInputedData(){
-  await createHistory({
-    buyerId: 12610204,
-    date: new Date("2023/8/24"),
-    price: 1445,
-    purchaseName: "ドメイン",
-    toolOrArtwork: "Tool",
-    reason: "物理部公式ウェブサイトのドメイン購入のため",
-    shopNameOrURL: "cloudflare"
-  })
-  await updateHistories()
-}
 
 const histories = ref<History[]>([])
 
@@ -96,6 +78,26 @@ async function getHistories(){
 
 async function updateHistories(){
   histories.value = await getHistories()
+}
+
+function downloadJSON(fileName: string, data: Object){
+  const blob = new Blob([JSON.stringify(data)], {type: "application/json"})
+  const url = URL.createObjectURL(blob)
+
+  const downloadLink = document.createElement("a")
+  downloadLink.download = `${fileName}.json`
+  downloadLink.href = url
+
+  document.body.appendChild(downloadLink)
+  downloadLink.click()
+  document.body.removeChild(downloadLink)
+  URL.revokeObjectURL(url)
+}
+
+async function downloadData(){
+  const { histories, members } = await $fetch("/api/downloadData", { method: "GET" })
+  downloadJSON("histories", histories)
+  downloadJSON("members", members)
 }
 
 updateHistories()
