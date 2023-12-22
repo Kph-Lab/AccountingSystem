@@ -33,5 +33,5 @@ export default defineEventHandler(async () => {
         }
     }))
 
-    return adjustedHistories
+    return adjustedHistories.reverse()
 })
