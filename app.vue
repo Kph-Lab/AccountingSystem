@@ -18,51 +18,23 @@
           class="text-2xl"/>
       </button>
     </header>
-    <main class="p-4 relative grow h-screen overflow-y-auto">
-      <CreateHistory
-        class="fixed bottom-10 left-1/2 -translate-x-1/2"
-        @created="updateHistories"/>
-      <div class="flex flex-col gap-4 max-w-2xl mx-auto">
-        <div
-          v-for="history in histories"
-          class="flex flex-col gap-2 p-2 rounded-lg">
-          <div class="flex flex-col">
-            <p class="text-lg font-semibold">
-              {{ history.purchaceName }}
-              <span class="text-sm font-normal">({{ history.toolOrArtwork }})</span>
-            </p>
-            <p class="text-xs text-black/60 pl-0.5">{{ history.reason }}</p>
+    <main class="p-4 pb-10 grow h-screen flex flex-col items-center">
+      <div class="max-h-full overflow-y-auto w-full">
+        <div class="flex flex-col gap-4 mx-auto max-w-2xl">
+          <div class="flex flex-row items-end gap-2 font-semibold">
+            <p>残り</p>
+            <h3 class="text-3xl">{{ BUDGET - used_money }}</h3>
+            <p class="mb-1">/</p>
+            <h5 class="text-sm"><span class="text-3xl">{{ BUDGET }}</span> 円</h5>
+            <p class="text-black/40">{{ Math.round((1 - used_money / BUDGET) * 10000) / 100 }}%</p>
           </div>
-          <div class="flex flex-row gap-4 pl-1 text-sm text-black/80">
-            <p>
-              <Icon name="bi:currency-yen" class="text-sm -mt-1 text-black/60"/>
-              {{ history.price }}
-            </p>
-            <p>
-              <Icon name="bi:calendar" class="text-sm -mt-1 text-black/60"/>
-              {{ history.date }}
-            </p>
-            <p>
-              <Icon name="bi:shop" class="text-sm -mt-1 text-black/60"/>
-              {{ history.shop }}
-            </p>
-            <div class="flex flex-row gap-1 items-center">
-              <img
-                :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
-                alt="buyer icon"
-                class="h-4 w-4 -mt-0.5">
-              <p>{{ history.buyer.name }}</p>
-            </div>
-            <p
-              v-if="history.memo"
-              style="
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;"
-            >{{ history.memo }}</p>
-          </div>
+          <History
+            v-for="history in histories"
+            :history="history"/>
         </div>
       </div>
+      <CreateHistory
+        @created="updateHistories"/>
     </main>
   </div>
 </template>
@@ -70,6 +42,25 @@
 import type { History } from "./model/history"
 
 const histories = ref<History[]>([])
+const BUDGET = 401384
+
+const formatDate = (date: Date) => {
+    const yyyy = date.getFullYear();
+    const mm = date.getMonth() + 1;
+    const dd = date.getDate();
+    const hh = date.getHours();
+    const mi = date.getMinutes();
+
+    return `${yyyy}/${mm}/${dd}_${hh}:${mi}`;
+}
+
+const used_money = computed(() => {
+  let money = 0
+  histories.value.forEach(history => {
+    if( history.memo != "文化祭予算" ) money += history.price
+  })
+  return money
+})
 
 async function getHistories(){
   const histories = await $fetch("/api/history/get", { method: "GET" }) as unknown as History[]
@@ -85,7 +76,7 @@ function downloadJSON(fileName: string, data: Object){
   const url = URL.createObjectURL(blob)
 
   const downloadLink = document.createElement("a")
-  downloadLink.download = `${fileName}.json`
+  downloadLink.download = `${fileName}_${formatDate(new Date())}.json`
   downloadLink.href = url
 
   document.body.appendChild(downloadLink)
