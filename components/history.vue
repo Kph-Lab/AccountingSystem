@@ -26,9 +26,9 @@
         </p>
         <div class="flex flex-row gap-1 items-center">
             <img
-            :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
-            alt="buyer icon"
-            class="h-4 w-4 -mt-0.5">
+                :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
+                alt="buyer icon"
+                class="h-4 w-4 -mt-0.5">
             <p>{{ history.buyer.name }}</p>
         </div>
         <p
