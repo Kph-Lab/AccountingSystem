@@ -32,6 +32,12 @@ model History {
   returned Boolean @default(false)
 }
 
+model Admin {
+  id Int @id @default(autoincrement())
+  name String
+  mail String
+}
+
 enum ToolOrArtwork {
   Artwork
   Tool

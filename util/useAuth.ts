@@ -6,8 +6,6 @@ const provider = new GoogleAuthProvider();
 export default () => {
     const auth = getAuth(firebaseApp);
     
-    const checkLogin = () => !!auth.currentUser
-    
     const observeLogin =  (
         loginCallback?: (user: User) => void,
         notLoginCallback?: () => void
@@ -21,16 +19,6 @@ export default () => {
         });
     }
 
-    const login = async () => {
-        await signInWithPopup(auth, provider)
-            .then((result) => {
-                const user = result.user
-                console.log(user)
-            }).catch((error: AuthError) => {
-                throw new Error(error.message)
-            });
-    }
-
     const logout = async () => {
         await signOut(auth)
             .then(() => {
@@ -42,5 +30,12 @@ export default () => {
             })
     }
 
-    return { observeLogin, checkLogin, login, logout }
+    const login = async () => {
+        await signInWithPopup(auth, provider)
+            .catch((error: AuthError) => {
+                throw new Error(error.message)
+            });
+    }
+
+    return { observeLogin, auth, login, logout }
 }

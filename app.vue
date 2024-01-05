@@ -7,6 +7,9 @@
       <NuxtLink to="/members">
         <Icon name="bi:people" class="text-2xl" />
       </NuxtLink>
+      <NuxtLink to="/settings">
+        <Icon name="bi:building" class="text-2xl" />
+      </NuxtLink>
       <div class="grow" />
       <button @click="logout">
         <Icon name="bi:box-arrow-left" class="text-2xl" />
