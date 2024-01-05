@@ -21,27 +21,8 @@
   <CreateHistory @created="updateHistories" />
 </template>
 <script setup lang="ts">
-import type { History } from "../model/history"
+import useHistory from "../hooks/useHistory"
+import { BUDGET } from "../util/config"
 
-const histories = ref<History[]>([])
-const BUDGET = 401384
-
-const used_money = computed(() => {
-  let money = 0
-  histories.value.forEach(history => {
-    if (history.memo != "文化祭予算") money += history.price
-  })
-  return money
-})
-
-async function getHistories() {
-  const histories = await $fetch("/api/history/get", { method: "GET" }) as unknown as History[]
-  return histories
-}
-
-async function updateHistories() {
-  histories.value = await getHistories()
-}
-
-updateHistories()
+const { histories, used_money, updateHistories } = useHistory()
 </script>
