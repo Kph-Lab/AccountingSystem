@@ -30,4 +30,8 @@ const members = (await $fetch("/api/member/get",{
         with_used_yens: true
     }
 })).sort(( { used_yen: a }, { used_yen: b } ) => b-a)
+
+definePageMeta({
+  middleware: ["auth"]
+})
 </script>

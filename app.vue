@@ -8,6 +8,9 @@
         <Icon name="bi:people" class="text-2xl" />
       </NuxtLink>
       <div class="grow" />
+      <button @click="logout">
+        <Icon name="bi:box-arrow-left" class="text-2xl" />
+      </button>
       <button @click="downloadData">
         <Icon name="bi:cloud-download" class="text-2xl" />
       </button>
@@ -18,6 +21,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import useAuth from './util/useAuth';
+
+const { logout } = useAuth()
+
 const formatDate = (date: Date) => {
   const yyyy = date.getFullYear();
   const mm = date.getMonth() + 1;

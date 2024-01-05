@@ -20,7 +20,5 @@ export default () => {
       histories.value = await getHistories()
     }
 
-    updateHistories()
-
     return { histories, used_money,  updateHistories }
 }

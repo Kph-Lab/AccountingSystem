@@ -25,4 +25,9 @@ import useHistory from "../hooks/useHistory"
 import { BUDGET } from "../util/config"
 
 const { histories, used_money, updateHistories } = useHistory()
+updateHistories()
+
+definePageMeta({
+  middleware: ["auth"]
+})
 </script>
