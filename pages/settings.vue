@@ -1,9 +1,17 @@
 <template>
   <div class="max-h-full overflow-y-auto w-full">
     <div class="flex flex-col gap-4 mx-auto max-w-2xl grow">
-      <div v-for="admin in admins" class="flex flex-col gap-2">
-        <h1>{{ admin.name }}</h1>
-        <p>{{ admin.mail }}</p>
+      <div
+        v-for="admin in admins"
+        class="flex flex-col p-2">
+        <div class="flex flex-row gap-2 items-center">
+          <h1 class="text-xl font-semibold">{{ admin.name }}</h1>
+          <Icon
+            v-if="admin.role == 'Admin'"
+            class="text-xl text-purple-500"
+            name="bi:person-circle"/>
+        </div>
+        <p class="text-black/40">{{ admin.mail }}</p>
       </div>
     </div>
   </div>
@@ -33,7 +41,7 @@ const updateAdmins = async () => {
 const admins = ref<Admin[]>([])
 updateAdmins()
 
-const newAdmin = reactive<Partial<Pick<Admin, "mail" | "name">>>({})
+const newAdmin = reactive<Partial<Pick<Admin, "mail" | "name" | "role">>>({})
 
 const addAdmin = async () => {
   await $fetch("/api/admin/create", {
@@ -42,11 +50,12 @@ const addAdmin = async () => {
   })
   newAdmin.name = undefined
   newAdmin.mail = undefined
+  newAdmin.role = undefined
   
   updateAdmins()
 }
 
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ["auth"]
 });
 </script>

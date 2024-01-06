@@ -32,13 +32,19 @@ model History {
   returned Boolean @default(false)
 }
 
+enum ToolOrArtwork {
+  Artwork
+  Tool
+}
+
 model Admin {
   id Int @id @default(autoincrement())
   name String
   mail String
+  role Role @default(Member)
 }
 
-enum ToolOrArtwork {
-  Artwork
-  Tool
+enum Role {
+  Admin
+  Member
 }

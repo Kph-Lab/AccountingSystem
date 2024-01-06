@@ -18,13 +18,26 @@
       <History v-for="history in histories" :history="history" />
     </div>
   </div>
-  <CreateHistory @created="updateHistories" />
+  <CreateHistory
+    v-if="role == 'Admin'"
+    @created="updateHistories"/>
 </template>
 <script setup lang="ts">
+import useAuth from "~/util/useAuth";
 import useHistory from "../hooks/useHistory"
 import { BUDGET } from "../util/config"
 
+const { auth } = useAuth()
+if( !auth.currentUser?.email ) throw new Error("ユーザーのアドレスがないです！")
+const { email } = auth.currentUser
+
+const admins = await $fetch("/api/admin/get")
+const myData = admins.find(admin => admin.mail == email)
+if( !myData ) throw new Error("管理者じゃないです！")
+const { role } = myData
+
 const { histories, used_money, updateHistories } = useHistory()
+
 updateHistories()
 
 definePageMeta({
