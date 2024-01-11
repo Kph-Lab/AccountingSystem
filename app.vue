@@ -14,9 +14,9 @@
       <button @click="logout">
         <Icon name="bi:box-arrow-left" class="text-2xl" />
       </button>
-      <button @click="downloadData">
+      <!--<button @click="downloadData">
         <Icon name="bi:cloud-download" class="text-2xl" />
-      </button>
+      </button>-->
     </header>
     <main class="p-4 pb-10 grow h-screen flex flex-col items-center">
       <NuxtPage />
@@ -28,7 +28,7 @@ import useAuth from './util/useAuth';
 
 const { logout } = useAuth()
 
-const formatDate = (date: Date) => {
+/*const formatDate = (date: Date) => {
   const yyyy = date.getFullYear();
   const mm = date.getMonth() + 1;
   const dd = date.getDate();
@@ -56,5 +56,5 @@ async function downloadData() {
   const { histories, members } = await $fetch("/api/downloadData", { method: "GET" })
   downloadJSON("histories", histories)
   downloadJSON("members", members)
-}
+}*/
 </script>
