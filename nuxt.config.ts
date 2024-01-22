@@ -4,5 +4,8 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/tailwindcss", "nuxt-icon"],
   nitro: {
     preset: "vercel"
+  },
+  runtimeConfig: {
+    historyImageApiUrl: ""
   }
 })

@@ -39,6 +39,13 @@
             white-space: nowrap;"
         >{{ history.memo }}</p>
         </div>
+        <img
+            :src="historyImageURL"
+            v-if="historyImageURL">
+        <button
+            @click="getImage">
+            領収書を見る
+        </button>
     </div>
 </template>
 <script setup lang="ts">
@@ -49,4 +56,13 @@ const { history } = defineProps<{
 }>()
 
 const isBunkasaiYosan = history.memo == "文化祭予算"
+
+const historyImageURL = ref<string>()
+
+const getImage = async () => {
+    const imageText = await $fetch("/api/history/getHistoryImage", {
+        method: "POST"
+    })
+    historyImageURL.value = `data:image/png;base64,${imageText}`
+}
 </script>
