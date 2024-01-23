@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-row gap-4 p-2 rounded-lg"
+        class="flex flex-row gap-4 items-center p-2 rounded-lg"
         :class="{
             'bg-orange-100': isBunkasaiYosan
         }">
@@ -25,6 +25,12 @@
                     <Icon name="bi:shop" class="text-sm -mt-1 text-black/60"/>
                     {{ history.shop }}
                 </p>
+                <button
+                    @click="getImage"
+                    class="flex flex-row items-baseline">
+                    <Icon name="bi:file-earmark-text" class="text-sm -mt-1 text-black/60"/>
+                    <p class="decoration-dotted decoration-black">領収書</p>
+                </button>
                 <div class="flex flex-row gap-1 items-center">
                     <img
                         :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
@@ -42,9 +48,8 @@
             </div>
         </div>
         <button
-            @click="getImage"
             class="w-12 h-12 rounded-full bg-slate-100 text-slate-500 grid place-content-center text-xl">
-            <Icon name="bi:file-earmark-text"/>
+            <Icon name="bi:three-dots"/>
         </button>
     </div>
     <div 
