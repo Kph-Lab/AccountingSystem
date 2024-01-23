@@ -1,12 +1,12 @@
 <template>
-    <div class="flex flex-row gap-4 items-end bg-white/80 backdrop-blur-md rounded-xl p-4 shadow-2xl">
+    <div class="flex flex-row gap-4 items-end bg-black rounded-xl p-4">
         <div class="flex flex-col gap-2">
             <div class="flex flex-row gap-4 items-center">
                 <input
                     type="text"
                     placeholder="物品名"
                     v-model="purchaseName"
-                    class="text-xl grow bg-transparent outline-none">
+                    class="text-xl grow bg-transparent outline-none placeholder:text-white/40">
                 <RadioGroup v-model="toolOrArtwork" class="flex flex-row gap-2">
                     <RadioGroupOption
                         v-slot="{ checked }"
@@ -18,7 +18,7 @@
                         <div
                             class="flex flex-row gap-2 items-center"
                             :class="{ 'opacity-40': !checked }">
-                            <span class="h-8 w-8 grid place-content-center bg-blue-200 rounded-full">
+                            <span class="h-8 w-8 grid place-content-center rounded-full">
                                 <Icon name="bi:tools" v-if="option.label == '工具'"/>
                                 <Icon name="bi:stars" v-if="option.label == '作品'"/>
                             </span>
@@ -27,17 +27,17 @@
                     </RadioGroupOption>
                 </RadioGroup>
             </div>
-            <input type="text" placeholder="購入目的" v-model="reason" class="bg-transparent outline-none">
-            <input type="text" placeholder="備考" v-model="memo" class="bg-transparent outline-none">
+            <input type="text" placeholder="購入目的" v-model="reason" class="bg-transparent outline-none placeholder:text-white/40">
+            <input type="text" placeholder="備考" v-model="memo" class="bg-transparent outline-none placeholder:text-white/40">
             <div class="flex flex-row gap-2">
                 <Combobox v-model="selectedMember">
                     <ComboboxInput
                         @change="memberQuery = $event.target.value"
                         :display-value="(member) => `${(member as Member).codeNumber} ${(member as Member).name}`"
                         placeholder="購入者"
-                        class="bg-transparent outline-none"/>
+                        class="bg-transparent outline-none placeholder:text-white/40"/>
                     <ComboboxOptions
-                        class="bg-white shadow-2xl shadow-black/10 p-4 max-h-40 rounded-xl overflow-y-auto flex flex-col gap-3 absolute -translate-y-[calc(100%+12px)]">
+                        class="bg-black shadow-2xl p-4 max-h-40 rounded-xl overflow-y-auto flex flex-col gap-3 absolute -translate-y-[calc(100%+12px)]">
                         <ComboboxOption
                             v-for="member in filteredMembers"
                             :key="member.id"
@@ -51,14 +51,14 @@
                         </ComboboxOption>
                     </ComboboxOptions>
                 </Combobox>
-                <input type="text" placeholder="店名 or URL" v-model="shopName" class="bg-transparent outline-none">
-                <input type="date" placeholder="購入日" v-model="selectedDate" class="bg-transparent outline-none">
+                <input type="text" placeholder="店名 or URL" v-model="shopName" class="bg-transparent outline-none placeholder:text-white/40">
+                <input type="date" placeholder="購入日" v-model="selectedDate" class="bg-transparent outline-none placeholder:text-white/40">
                 <input
                     type="number"
                     placeholder="金額"
                     :value="price"
                     @input="(a) => price = Number((a as any).target.value as string)"
-                    class="bg-transparent outline-none">
+                    class="bg-transparent outline-none placeholder:text-white/40">
             </div>
         </div>
         <button @click="createHistoryFromInputedData"

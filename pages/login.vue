@@ -7,7 +7,7 @@
             <h2 class="text-4xl">ログイン</h2>
             <p class="text-center">ログインに使うGmailアドレスは<br>Discordで管理者に送信されたもののみ使用できます</p>
             <button
-                class="border-2 border-black py-4 px-6 rounded-full"
+                class="bg-black py-4 px-6 rounded-full"
                 @click="login">
                 Googleアカウントでログイン
             </button>

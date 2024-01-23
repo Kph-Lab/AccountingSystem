@@ -9,7 +9,7 @@
           <h5 class="text-sm"><span class="text-3xl">{{ BUDGET }}</span> 円</h5>
           <p class="text-black/40">{{ Math.round((1 - used_money / BUDGET) * 10000) / 100 }}%</p>
         </div>
-        <div class="bg-slate-200 h-1 rounded-full">
+        <div class="bg-zinc-800 h-1 rounded-full">
           <div
             class="h-full bg-green-400 rounded-full"
             :style="{ width: `${ Math.round((1 - used_money / BUDGET) * 10000) / 100 }%` }"/>

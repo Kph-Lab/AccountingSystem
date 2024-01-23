@@ -12,7 +12,7 @@
                     <p class="text-xl -mt-1">{{ member.codeNumber }} {{ member.name }}</p>
                     <p>{{ Math.round((member.used_yen / BUDGET) * 10000) / 100 }}%</p>
                 </div>
-                <div class="bg-slate-200 h-1 rounded-full">
+                <div class="bg-zinc-800 h-1 rounded-full">
                     <div
                         class="h-full bg-green-400 rounded-full"
                         :style="{ width: `${ Math.round((member.used_yen / BUDGET) * 10000) / 100 }%` }"/>

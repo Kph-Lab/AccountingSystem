@@ -1,8 +1,9 @@
 <template>
     <div
-        class="flex flex-row gap-4 items-center p-2 rounded-lg"
+        class="flex flex-row gap-4 items-center p-4 rounded-lg"
         :class="{
-            'bg-orange-100': isBunkasaiYosan
+            'bg-orange-500/30': isBunkasaiYosan,
+            'bg-black': !isBunkasaiYosan
         }">
         <div class="flex flex-col gap-2 grow">
             <div class="flex flex-col">
@@ -10,25 +11,25 @@
                     {{ history.purchaceName }}
                     <span class="text-sm font-normal">({{ history.toolOrArtwork }})</span>
                 </p>
-                <p class="text-xs text-black/60 pl-0.5">{{ history.reason }}</p>
+                <p class="text-xs text-white/60 pl-0.5">{{ history.reason }}</p>
                 </div>
-                <div class="flex flex-row gap-4 pl-1 text-sm text-black/80">
+                <div class="flex flex-row gap-4 pl-1 text-sm text-white/80">
                 <p>
-                    <Icon name="bi:currency-yen" class="text-sm -mt-1 text-black/60"/>
+                    <Icon name="bi:currency-yen" class="text-sm -mt-1 text-white/60"/>
                     {{ history.price }}
                 </p>
                 <p>
-                    <Icon name="bi:calendar" class="text-sm -mt-1 text-black/60"/>
+                    <Icon name="bi:calendar" class="text-sm -mt-1 text-white/60"/>
                     {{ history.date }}
                 </p>
                 <p>
-                    <Icon name="bi:shop" class="text-sm -mt-1 text-black/60"/>
+                    <Icon name="bi:shop" class="text-sm -mt-1 text-white/60"/>
                     {{ history.shop }}
                 </p>
                 <button
                     @click="getImage"
                     class="flex flex-row items-baseline">
-                    <Icon name="bi:file-earmark-text" class="text-sm -mt-1 text-black/60"/>
+                    <Icon name="bi:file-earmark-text" class="text-sm -mt-1 text-white/60"/>
                     <p class="decoration-dotted decoration-black">領収書</p>
                 </button>
                 <div class="flex flex-row gap-1 items-center">
@@ -48,18 +49,18 @@
             </div>
         </div>
         <button
-            class="w-12 h-12 rounded-full bg-slate-100 text-slate-500 grid place-content-center text-xl">
-            <Icon name="bi:three-dots"/>
+            class="w-12 h-12 rounded-full text-white grid place-content-center text-xl">
+            <Icon name="bi:cloud-upload"/>
         </button>
     </div>
     <div 
         class="top-0 left-0 fixed w-screen h-screen z-10"
         v-if="historyImageURL"
         @click="historyImageURL = undefined">
-        <div class="w-full h-full bg-black/20"/>
+        <div class="w-full h-full bg-black/40"/>
         <img
             :src="historyImageURL"
-            class="drop-shadow-xl fixed max-w-sm w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            class="fixed max-w-sm w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
     </div>
 </template>
 <script setup lang="ts">

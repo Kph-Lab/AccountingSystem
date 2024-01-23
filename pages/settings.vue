@@ -11,7 +11,7 @@
             class="text-xl text-purple-500"
             name="bi:person-circle"/>
         </div>
-        <p class="text-black/40">{{ admin.mail }}</p>
+        <p class="text-white/30">{{ admin.mail }}</p>
       </div>
     </div>
   </div>
