@@ -1,55 +1,70 @@
 <template>
     <div
-        class="flex flex-col gap-2 p-2 rounded-lg"
+        class="flex flex-row gap-4 p-2 rounded-lg"
         :class="{
             'bg-orange-100': isBunkasaiYosan
         }">
-        <div class="flex flex-col">
-        <p class="text-lg font-semibold">
-            {{ history.purchaceName }}
-            <span class="text-sm font-normal">({{ history.toolOrArtwork }})</span>
-        </p>
-        <p class="text-xs text-black/60 pl-0.5">{{ history.reason }}</p>
+        <div class="flex flex-col gap-2 grow">
+            <div class="flex flex-col">
+                <p class="text-lg font-semibold">
+                    {{ history.purchaceName }}
+                    <span class="text-sm font-normal">({{ history.toolOrArtwork }})</span>
+                </p>
+                <p class="text-xs text-black/60 pl-0.5">{{ history.reason }}</p>
+                </div>
+                <div class="flex flex-row gap-4 pl-1 text-sm text-black/80">
+                <p>
+                    <Icon name="bi:currency-yen" class="text-sm -mt-1 text-black/60"/>
+                    {{ history.price }}
+                </p>
+                <p>
+                    <Icon name="bi:calendar" class="text-sm -mt-1 text-black/60"/>
+                    {{ history.date }}
+                </p>
+                <p>
+                    <Icon name="bi:shop" class="text-sm -mt-1 text-black/60"/>
+                    {{ history.shop }}
+                </p>
+                <div class="flex flex-row gap-1 items-center">
+                    <img
+                        :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
+                        alt="buyer icon"
+                        class="h-4 w-4 -mt-0.5">
+                    <p>{{ history.buyer.name }}</p>
+                </div>
+                <p
+                    v-if="history.memo"
+                    style="
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;"
+                >{{ history.memo }}</p>
+            </div>
         </div>
-        <div class="flex flex-row gap-4 pl-1 text-sm text-black/80">
-        <p>
-            <Icon name="bi:currency-yen" class="text-sm -mt-1 text-black/60"/>
-            {{ history.price }}
-        </p>
-        <p>
-            <Icon name="bi:calendar" class="text-sm -mt-1 text-black/60"/>
-            {{ history.date }}
-        </p>
-        <p>
-            <Icon name="bi:shop" class="text-sm -mt-1 text-black/60"/>
-            {{ history.shop }}
-        </p>
-        <div class="flex flex-row gap-1 items-center">
-            <img
-                :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
-                alt="buyer icon"
-                class="h-4 w-4 -mt-0.5">
-            <p>{{ history.buyer.name }}</p>
-        </div>
-        <p
-            v-if="history.memo"
-            style="
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;"
-        >{{ history.memo }}</p>
-        </div>
+        <button
+            @click="getImage"
+            class="w-12 h-12 rounded-full bg-slate-100 text-slate-500 grid place-content-center text-xl">
+            <Icon name="bi:file-earmark-text"/>
+        </button>
+    </div>
+    <div 
+        class="top-0 left-0 fixed w-screen h-screen z-10"
+        v-if="historyImageURL"
+        @click="historyImageURL = undefined">
+        <div class="w-full h-full bg-black/20"/>
         <img
             :src="historyImageURL"
-            v-if="historyImageURL">
-        <button
-            @click="getImage">
-            領収書を見る
-        </button>
+            class="drop-shadow-xl fixed max-w-sm w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
     </div>
 </template>
 <script setup lang="ts">
 import type { History } from '~/model/history';
+import { getStorage, ref as reference, getDownloadURL } from "firebase/storage";
+
+const storage = getStorage();
+const spaceRef = reference(storage, 'Ampoi.png');
+
+const historyImageURL = ref<string>()
 
 const { history } = defineProps<{
     history: History
@@ -57,12 +72,7 @@ const { history } = defineProps<{
 
 const isBunkasaiYosan = history.memo == "文化祭予算"
 
-const historyImageURL = ref<string>()
-
 const getImage = async () => {
-    const imageText = await $fetch("/api/history/getHistoryImage", {
-        method: "POST"
-    })
-    historyImageURL.value = `data:image/png;base64,${imageText}`
+    historyImageURL.value = await getDownloadURL(spaceRef)
 }
 </script>
