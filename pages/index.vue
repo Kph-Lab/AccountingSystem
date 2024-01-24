@@ -30,7 +30,7 @@
 import useAuth from "~/util/useAuth";
 import useHistory from "../hooks/useHistory"
 import { BUDGET } from "../util/config"
-import { getStorage, ref as reference, listAll, type StorageReference } from "firebase/storage";
+import { getStorage, ref as reference, listAll } from "firebase/storage";
 
 const { auth } = useAuth()
 if( !auth.currentUser?.email ) throw new Error("ユーザーのアドレスがないです！")
@@ -41,9 +41,11 @@ const myData = admins.find(admin => admin.mail == email)
 if( !myData ) throw new Error("管理者じゃないです！")
 const { role } = myData
 
+
 const { histories, used_money, updateHistories } = useHistory()
 
-const { historyImageFolderName } = useRuntimeConfig().public
+const { historyImageFolderName, firebaseConfig } = useRuntimeConfig().public
+console.log(firebaseConfig)
 const storage = getStorage();
 const historyImagesFolderRef = reference(storage, historyImageFolderName)
 

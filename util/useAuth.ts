@@ -1,10 +1,9 @@
 import { getAuth, onAuthStateChanged, type User, GoogleAuthProvider, signInWithPopup, type AuthError, signOut } from "firebase/auth"
-import { firebaseApp } from "./firebase"
 
 const provider = new GoogleAuthProvider();
 
 export default () => {
-    const auth = getAuth(firebaseApp);
+    const auth = getAuth();
     
     const observeLogin =  (
         loginCallback?: (user: User) => void,

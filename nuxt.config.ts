@@ -8,7 +8,15 @@ export default defineNuxtConfig({
   runtimeConfig: {
     historyImageApiUrl: "",
     public: {
-      historyImageFolderName: "2023年度"
+      historyImageFolderName: "2023年度",
+      firebaseConfig: {
+        apiKey: "",
+        authDomain: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: ""
+      }
     }
   }
 })
