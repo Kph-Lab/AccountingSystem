@@ -27,7 +27,7 @@
                     {{ history.shop }}
                 </p>
                 <button
-                    @click="getImage"
+                    @click="getHistoryImage"
                     class="flex flex-row items-baseline">
                     <Icon name="bi:file-earmark-text" class="text-sm -mt-1 text-white/60"/>
                     <p class="decoration-dotted decoration-black">領収書</p>
@@ -49,7 +49,8 @@
             </div>
         </div>
         <button
-            class="w-12 h-12 rounded-full text-white grid place-content-center text-xl">
+            class="w-12 h-12 rounded-full text-white grid place-content-center text-xl"
+            @click="uploadHistoryImage">
             <Icon name="bi:cloud-upload"/>
         </button>
     </div>
@@ -65,20 +66,69 @@
 </template>
 <script setup lang="ts">
 import type { History } from '~/model/history';
-import { getStorage, ref as reference, getDownloadURL } from "firebase/storage";
-
-const storage = getStorage();
-const spaceRef = reference(storage, 'Ampoi.png');
+import { getStorage, ref as reference, getDownloadURL, uploadBytes } from "firebase/storage";
 
 const historyImageURL = ref<string>()
 
-const { history } = defineProps<{
+const props = defineProps<{
     history: History
 }>()
 
-const isBunkasaiYosan = history.memo == "文化祭予算"
+const folderName = "2023年度"
+const isBunkasaiYosan = props.history.memo == "文化祭予算"
 
-const getImage = async () => {
-    historyImageURL.value = await getDownloadURL(spaceRef)
+const storage = getStorage();
+const historyImageRef = computed(() => {
+    return reference(storage, `${folderName}/Ampoi.png`)
+})
+
+const getHistoryImage = async () => {
+    historyImageURL.value = await getDownloadURL(historyImageRef.value)
+}
+
+const canvasToBlob = (canvas: HTMLCanvasElement) => new Promise<Blob | null>((resolve) => {
+    canvas.toBlob(resolve)
+})
+
+const uploadHistoryImage = async () => {
+    const imageInputElement = document.createElement("input")
+    imageInputElement.type = "file"
+    imageInputElement.accept = "image/**"
+    
+    imageInputElement.addEventListener("change", async () => {
+        if( !imageInputElement.files ) throw new Error("ファイルが入力されてません")
+        const file = imageInputElement.files[0]
+        if( file && file.type.startsWith("image/") ){
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                
+                img.onload = async () => {
+                    const width = img.width;
+                    const height = img.height;
+
+                    const convertCanvas = document.createElement("canvas")
+                    convertCanvas.width = width
+                    convertCanvas.height = height
+
+                    const ctx = convertCanvas.getContext("2d")
+                    if( !ctx ) throw new Error("?????")
+                    ctx.drawImage(img, 0, 0)
+
+                    const blob = await canvasToBlob(convertCanvas)
+                    if( !blob ) throw new Error("blobがnullです！")
+                    await uploadBytes(historyImageRef.value, blob)
+                }
+
+                if( typeof e.target?.result != "string" ) throw new Error("???")
+                img.src = e.target.result
+            };
+            reader.readAsDataURL(file);
+        }else{
+            console.error("選択された画像はファイルではないです")
+        }
+    })
+
+    imageInputElement.click()
 }
 </script>

@@ -21,6 +21,8 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
     "@prisma/client": "^5.7.1",
-    "firebase": "^10.7.1"
+    "buffer": "^6.0.3",
+    "firebase": "^10.7.1",
+    "sharp": "^0.33.2"
   }
 }

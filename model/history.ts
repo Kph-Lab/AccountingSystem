@@ -1,4 +1,5 @@
 export type History = {
+    id: number
     buyer: {
         id: number
         codeNumber?: number

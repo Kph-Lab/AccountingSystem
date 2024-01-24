@@ -22,6 +22,7 @@ export default defineEventHandler(async () => {
     const adjustedHistories = await Promise.all(histories.map(async (history): Promise<History> => {
         const toolOrArtwork: "工具" | "作品" = history.toolOrArtwork == "Tool" ? "工具" : "作品"
         return {
+            id: history.id,
             buyer: await findMember(history.buyerId),
             price: history.price,
             purchaceName: history.purchaseName,
