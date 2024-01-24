@@ -6,6 +6,9 @@ export default defineNuxtConfig({
     preset: "vercel"
   },
   runtimeConfig: {
-    historyImageApiUrl: ""
+    historyImageApiUrl: "",
+    public: {
+      historyImageFolderName: "2023年度"
+    }
   }
 })

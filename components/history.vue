@@ -28,7 +28,10 @@
                 </p>
                 <button
                     @click="getHistoryImage"
-                    class="flex flex-row items-baseline">
+                    class="flex flex-row items-baseline"
+                    :class="{
+                        'text-white/40': !includeHistoryImage
+                    }">
                     <Icon name="bi:file-earmark-text" class="text-sm -mt-1 text-white/60"/>
                     <p class="decoration-dotted decoration-black">領収書</p>
                 </button>
@@ -72,14 +75,15 @@ const historyImageURL = ref<string>()
 
 const props = defineProps<{
     history: History
+    includeHistoryImage: boolean
 }>()
 
-const folderName = "2023年度"
 const isBunkasaiYosan = props.history.memo == "文化祭予算"
 
+const { historyImageFolderName } = useRuntimeConfig().public
 const storage = getStorage();
 const historyImageRef = computed(() => {
-    return reference(storage, `${folderName}/Ampoi.png`)
+    return reference(storage, `${historyImageFolderName}/${props.history.id}.png`)
 })
 
 const getHistoryImage = async () => {
@@ -89,6 +93,10 @@ const getHistoryImage = async () => {
 const canvasToBlob = (canvas: HTMLCanvasElement) => new Promise<Blob | null>((resolve) => {
     canvas.toBlob(resolve)
 })
+
+const emit = defineEmits<{
+    (e: "updateImages"): void
+}>()
 
 const uploadHistoryImage = async () => {
     const imageInputElement = document.createElement("input")
@@ -118,6 +126,8 @@ const uploadHistoryImage = async () => {
                     const blob = await canvasToBlob(convertCanvas)
                     if( !blob ) throw new Error("blobがnullです！")
                     await uploadBytes(historyImageRef.value, blob)
+
+                    emit("updateImages")
                 }
 
                 if( typeof e.target?.result != "string" ) throw new Error("???")

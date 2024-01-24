@@ -15,7 +15,11 @@
             :style="{ width: `${ Math.round((1 - used_money / BUDGET) * 10000) / 100 }%` }"/>
         </div>
       </div>
-      <History v-for="history in histories" :history="history" />
+      <History
+        v-for="history in histories"
+        :history="history"
+        :includeHistoryImage="historyImageNames.includes(`${history.id.toString()}.png`)"
+        @updateImages="updateHistoryImageReferences"/>
     </div>
   </div>
   <CreateHistory
@@ -26,6 +30,7 @@
 import useAuth from "~/util/useAuth";
 import useHistory from "../hooks/useHistory"
 import { BUDGET } from "../util/config"
+import { getStorage, ref as reference, listAll, type StorageReference } from "firebase/storage";
 
 const { auth } = useAuth()
 if( !auth.currentUser?.email ) throw new Error("ユーザーのアドレスがないです！")
@@ -38,7 +43,17 @@ const { role } = myData
 
 const { histories, used_money, updateHistories } = useHistory()
 
+const { historyImageFolderName } = useRuntimeConfig().public
+const storage = getStorage();
+const historyImagesFolderRef = reference(storage, historyImageFolderName)
+
+const historyImageNames = ref<string[]>([])
+async function updateHistoryImageReferences(){
+  historyImageNames.value = (await listAll(historyImagesFolderRef)).items.map(reference => reference.name)
+}
+
 updateHistories()
+updateHistoryImageReferences()
 
 definePageMeta({
   middleware: ["auth"]
