@@ -17,5 +17,10 @@
 <script setup lang="ts">
 import useAuth from '~/util/useAuth';
 
-const { login } = useAuth()
+const { login, observeLogin } = useAuth()
+
+const router = useRouter()
+observeLogin(() => {
+    router.push("/")
+})
 </script>
