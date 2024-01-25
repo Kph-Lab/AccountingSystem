@@ -30,10 +30,11 @@
                     @click="getHistoryImage"
                     class="flex flex-row items-baseline"
                     :class="{
-                        'text-white/40': !includeHistoryImage
+                        'text-white/60': !includeHistoryImage,
+                        'text-blue-500': includeHistoryImage
                     }">
-                    <Icon name="bi:file-earmark-text" class="text-sm -mt-1 text-white/60"/>
-                    <p class="decoration-dotted decoration-black">領収書</p>
+                    <Icon name="bi:file-earmark-text" class="text-sm -mt-1"/>
+                    <p>領収書</p>
                 </button>
                 <div class="flex flex-row gap-1 items-center">
                     <img
@@ -53,7 +54,7 @@
         </div>
         <button
             class="w-12 h-12 rounded-full text-white grid place-content-center text-xl"
-            @click="uploadHistoryImage">
+            @click="registerReceiptWithDialog">
             <Icon name="bi:cloud-upload"/>
         </button>
     </div>
@@ -98,7 +99,7 @@ const emit = defineEmits<{
     (e: "updateImages"): void
 }>()
 
-const uploadHistoryImage = async () => {
+const registerReceiptWithDialog = () => {
     const imageInputElement = document.createElement("input")
     imageInputElement.type = "file"
     imageInputElement.accept = "image/**"
@@ -107,38 +108,42 @@ const uploadHistoryImage = async () => {
         if( !imageInputElement.files ) throw new Error("ファイルが入力されてません")
         const file = imageInputElement.files[0]
         if( file && file.type.startsWith("image/") ){
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                
-                img.onload = async () => {
-                    const width = img.width;
-                    const height = img.height;
-
-                    const convertCanvas = document.createElement("canvas")
-                    convertCanvas.width = width
-                    convertCanvas.height = height
-
-                    const ctx = convertCanvas.getContext("2d")
-                    if( !ctx ) throw new Error("?????")
-                    ctx.drawImage(img, 0, 0)
-
-                    const blob = await canvasToBlob(convertCanvas)
-                    if( !blob ) throw new Error("blobがnullです！")
-                    await uploadBytes(historyImageRef.value, blob)
-
-                    emit("updateImages")
-                }
-
-                if( typeof e.target?.result != "string" ) throw new Error("???")
-                img.src = e.target.result
-            };
-            reader.readAsDataURL(file);
+            registerReceipt(file)
         }else{
             console.error("選択された画像はファイルではないです")
         }
     })
 
     imageInputElement.click()
+}
+
+const registerReceipt = async (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        
+        img.onload = async () => {
+            const width = img.width;
+            const height = img.height;
+
+            const convertCanvas = document.createElement("canvas")
+            convertCanvas.width = width
+            convertCanvas.height = height
+
+            const ctx = convertCanvas.getContext("2d")
+            if( !ctx ) throw new Error("?????")
+            ctx.drawImage(img, 0, 0)
+
+            const blob = await canvasToBlob(convertCanvas)
+            if( !blob ) throw new Error("blobがnullです！")
+            await uploadBytes(historyImageRef.value, blob)
+
+            emit("updateImages")
+        }
+
+        if( typeof e.target?.result != "string" ) throw new Error("???")
+        img.src = e.target.result
+    };
+    reader.readAsDataURL(file);
 }
 </script>
