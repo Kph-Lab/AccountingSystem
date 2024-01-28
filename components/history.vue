@@ -18,20 +18,20 @@
                 <p class="text-xs text-white/60 pl-0.5">{{ history.reason }}</p>
             </div>
             <div class="flex flex-row gap-4 pl-1 text-sm text-white/80">
-                <p>
+                <p class="basis-1/5 overflow-hidden text-ellipsis whitespace-nowrap">
                     <Icon name="bi:currency-yen" class="text-sm -mt-1 text-white/60"/>
                     {{ history.price }}
                 </p>
-                <p>
+                <p class="basis-1/5 overflow-hidden text-ellipsis whitespace-nowrap">
                     <Icon name="bi:calendar" class="text-sm -mt-1 text-white/60"/>
                     {{ history.date }}
                 </p>
-                <p>
+                <p class="basis-1/5 overflow-hidden text-ellipsis whitespace-nowrap">
                     <Icon name="bi:shop" class="text-sm -mt-1 text-white/60"/>
                     {{ history.shop }}
                 </p>
                 <p
-                    class="flex flex-row items-baseline"
+                    class="flex flex-row items-baseline basis-1/5 overflow-hidden text-ellipsis whitespace-nowrap"
                     :class="{
                         'text-white/60': !includeHistoryImage,
                         'text-blue-500': includeHistoryImage
@@ -39,21 +39,22 @@
                     <Icon name="bi:file-earmark-text" class="text-sm -mt-1"/>
                     <p>領収書</p>
                 </p>
-                <div class="flex flex-row gap-1 items-center">
+                <div class="flex flex-row gap-1 items-center basis-1/5 overflow-hidden text-ellipsis whitespace-nowrap">
                     <img
                         :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
                         alt="buyer icon"
                         class="h-4 w-4 -mt-0.5">
                     <p>{{ history.buyer.name }}</p>
                 </div>
-                <p
-                    v-if="history.memo"
-                    style="
+            </div>
+            <p
+                v-if="history.memo"
+                style="
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;"
-                >{{ history.memo }}</p>
-            </div>
+                class="grow pl-1 text-white/60 text-xs"
+            >{{history.memo}}</p>
         </div>
     </div>
     <div 
@@ -62,24 +63,24 @@
         <div
             class="w-full h-full bg-black/40"
             @click="showHistoryModal = false"/>
-        <div class="rounded-3xl flex flex-col gap-4 bg-zinc-900 p-4 fixed max-w-xl w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div class="rounded-3xl flex flex-col gap-4 bg-zinc-900 p-8 fixed max-w-xl w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <div class="flex flex-row gap-2 text-3xl font-semibold items-baseline">
                 <p>{{ history.purchaceName }}</p>
                 <p class="text-white/30 text-2xl">#{{ history.id }}</p>
             </div>
-            <div class="flex flex-row gap-4 pl-1 text-sm text-white/80">
-                <p>
-                    <Icon name="bi:currency-yen" class="text-sm -mt-1 text-white/60"/>
-                    {{ history.price }}
-                </p>
-                <p>
-                    <Icon name="bi:calendar" class="text-sm -mt-1 text-white/60"/>
-                    {{ history.date }}
-                </p>
-                <p>
-                    <Icon name="bi:shop" class="text-sm -mt-1 text-white/60"/>
-                    {{ history.shop }}
-                </p>
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-row gap-3 items-center">
+                    <Icon name="bi:currency-yen" class="text-lg -mt-1 text-white/60"/>
+                    <p>{{ history.price }}</p>
+                </div>
+                <div class="flex flex-row gap-3 items-center">
+                    <Icon name="bi:calendar" class="text-lg -mt-1 text-white/60"/>
+                    <p>{{ history.date }}</p>
+                </div>
+                <div class="flex flex-row gap-3 items-center">
+                    <Icon name="bi:shop" class="text-lg -mt-1 text-white/60"/>
+                    <p>{{ history.shop }}</p>
+                </div>
                 <div class="flex flex-row gap-1 items-center">
                     <img
                         :src="`https://source.boringavatars.com/marble/120/${history.buyer.id}?colors=610AFA,FA0AF2,B00AFA,0E05FC,FF005C`"
@@ -87,6 +88,8 @@
                         class="h-4 w-4 -mt-0.5">
                     <p>{{ history.buyer.name }}</p>
                 </div>
+            </div>
+            <div class="flex flex-row gap-4 pl-1 text-sm text-white/80">
                 <p
                     v-if="history.memo"
                     style="
