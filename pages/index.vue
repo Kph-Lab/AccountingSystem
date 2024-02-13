@@ -44,8 +44,7 @@ const { role } = myData
 
 const { histories, used_money, updateHistories } = useHistory()
 
-const { historyImageFolderName, firebaseConfig } = useRuntimeConfig().public
-console.log(firebaseConfig)
+const { historyImageFolderName } = useRuntimeConfig().public
 const storage = getStorage();
 const historyImagesFolderRef = reference(storage, historyImageFolderName)
 
